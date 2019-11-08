@@ -1,13 +1,13 @@
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 
-pub trait Ipv4Ext {
+pub trait Ipv4AddrExt {
     fn is_shared(&self) -> bool;
     fn is_ietf_protocol_assignment(&self) -> bool;
     fn is_reserved(&self) -> bool;
     fn is_benchmarking(&self) -> bool;
 }
 
-impl Ipv4Ext for Ipv4Addr {
+impl Ipv4AddrExt for Ipv4Addr {
     fn is_shared(&self) -> bool {
         self.octets()[0] == 100 && (self.octets()[1] & 0b1100_0000 == 0b0100_0000)
     }
@@ -35,10 +35,10 @@ impl IpExt for Ipv4Addr {
             && !self.is_link_local()
             && !self.is_broadcast()
             && !self.is_documentation()
-            && !Ipv4Ext::is_shared(self)
-            && !Ipv4Ext::is_ietf_protocol_assignment(self)
-            && !Ipv4Ext::is_reserved(self)
-            && !Ipv4Ext::is_benchmarking(self)
+            && !Ipv4AddrExt::is_shared(self)
+            && !Ipv4AddrExt::is_ietf_protocol_assignment(self)
+            && !Ipv4AddrExt::is_reserved(self)
+            && !Ipv4AddrExt::is_benchmarking(self)
             && self.octets()[0] != 0
     }
 }
@@ -53,7 +53,7 @@ pub enum Ipv6MulticastScope {
     Global,
 }
 
-pub trait Ipv6Ext {
+pub trait Ipv6AddrExt {
     fn multicast_scope(&self) -> Option<Ipv6MulticastScope>;
     fn is_unicast_link_local(&self) -> bool;
     fn is_unique_local(&self) -> bool;
@@ -61,7 +61,7 @@ pub trait Ipv6Ext {
     fn is_documentation(&self) -> bool;
 }
 
-impl Ipv6Ext for Ipv6Addr {
+impl Ipv6AddrExt for Ipv6Addr {
     fn multicast_scope(&self) -> Option<Ipv6MulticastScope> {
         if self.is_multicast() {
             match self.segments()[0] & 0x000f {
@@ -90,10 +90,10 @@ impl Ipv6Ext for Ipv6Addr {
     fn is_unicast_global(&self) -> bool {
         !self.is_multicast()
             && !self.is_loopback()
-            && !Ipv6Ext::is_unicast_link_local(self)
-            && !Ipv6Ext::is_unique_local(self)
+            && !Ipv6AddrExt::is_unicast_link_local(self)
+            && !Ipv6AddrExt::is_unique_local(self)
             && !self.is_unspecified()
-            && !Ipv6Ext::is_documentation(self)
+            && !Ipv6AddrExt::is_documentation(self)
     }
 
     fn is_documentation(&self) -> bool {
@@ -103,9 +103,9 @@ impl Ipv6Ext for Ipv6Addr {
 
 impl IpExt for Ipv6Addr {
     fn is_global(&self) -> bool {
-        match Ipv6Ext::multicast_scope(self) {
+        match Ipv6AddrExt::multicast_scope(self) {
             Some(Ipv6MulticastScope::Global) => true,
-            None => Ipv6Ext::is_unicast_global(self),
+            None => Ipv6AddrExt::is_unicast_global(self),
             _ => false,
         }
     }
