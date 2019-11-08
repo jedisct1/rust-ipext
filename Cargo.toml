@@ -4,5 +4,6 @@ version = "0.1.0"
 authors = ["Frank Denis <github@pureftpd.org>"]
 edition = "2018"
 description = "ip feature for stable rust"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
